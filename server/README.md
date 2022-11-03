@@ -4,3 +4,5 @@ POST: /api/users/login -> login the user
 POST: /api/users -> create the user
 PUT: /api/user/:id -> update the user
 DELETE: /api/users/:id -> delete the user
+
+RUN THE SERVER COMMAND: nodemon

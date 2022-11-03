@@ -3,11 +3,16 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import userRouter from './routes/user.routes';
+import dev from './config/index';
+import connectDB from './config/db';
 
 const app = express();
-const port = 3001;
+const port = dev.app.port || 4008;
 
+//middleware
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 //routes
@@ -26,6 +31,8 @@ app.use((req, res, next) => {
   res.status(500).send('Something broke!');
 });
 
-app.listen(port, () => {
+//port and DB
+app.listen(port, async () => {
   console.log(`Server is running at port http://localhost:${port}`);
+  await connectDB();
 });
