@@ -41,15 +41,15 @@ const userSchema = new mongoose.Schema({
   //   required: [true, 'Image is required'],
   // },
 
-  // isAdmin: {
-  //   type: Number,
-  //   required: [true, 'isAdmin is required'],
-  // },
+  isAdmin: {
+    type: Number,
+    default: 0,
+  },
 
-  // isVerified: {
-  //   type: Number,
-  //   default: 0,
-  // },
+  isVerified: {
+    type: Number,
+    default: 0,
+  },
 
   createdAt: {
     type: Date,
