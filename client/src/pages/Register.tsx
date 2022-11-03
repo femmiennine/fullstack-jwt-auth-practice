@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import axios from 'axios'
+import { JSDocUnknownType } from 'typescript'
+import Modal from '../components/Modal'
 
-interface IRegister {
+interface Register {
   name: string
   email: string
   phone: string
@@ -15,15 +18,30 @@ const Register = () => {
     password: '',
   })
 
+  const [modalText, setModalText] = useState<string>('')
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser((prevState) => {
       return { ...prevState, [event.target.name]: event.target.value }
     })
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    console.log(user)
+    try {
+      const response = await axios.post('http://localhost:4000/api/users/register', user)
+      // console.log(response.data.message)
+      setModalText(response.data.message)
+      setIsModalOpen(true)
+    } catch (error: any) {
+      setModalText(error.response.data.message)
+      setIsModalOpen(true)
+    }
+  }
+
+  const closeModal = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -81,6 +99,7 @@ const Register = () => {
           <button type='submit'>Sign in</button>
         </div>
       </form>
+      {isModalOpen && <Modal modalText={modalText} closeModal={closeModal} />}
     </div>
   )
 }
