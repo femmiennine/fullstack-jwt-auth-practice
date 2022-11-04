@@ -1,22 +1,18 @@
 import { useEffect } from 'react'
-import { VoidExpression } from 'typescript'
 
-interface ModalText {
+type IModal = {
   modalText: string
-  closeModal(): any
+  closeModal: () => void
+  responseStatus: boolean
 }
 
-const Modal = (props: ModalText) => {
+const Modal = ({ modalText, closeModal, responseStatus }: IModal) => {
   useEffect(() => {
     setTimeout(() => {
-      // tslint:disable-next-line
-      // @ts-ignore
       closeModal()
     }, 2000)
-    // tslint:disable-next-line
-    // @ts-ignore
-  }, [closeModal()])
+  }, [closeModal])
 
-  return <p>{props.modalText}</p>
+  return <p style={{ color: responseStatus ? 'green' : 'red' }}>{modalText}</p>
 }
 export default Modal

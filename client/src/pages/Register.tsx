@@ -1,14 +1,6 @@
-import { useState } from 'react'
 import axios from 'axios'
-import { JSDocUnknownType } from 'typescript'
+import { useState } from 'react'
 import Modal from '../components/Modal'
-
-interface Register {
-  name: string
-  email: string
-  phone: string
-  password: string
-}
 
 const Register = () => {
   const [user, setUser] = useState({
@@ -17,9 +9,9 @@ const Register = () => {
     phone: '',
     password: '',
   })
-
   const [modalText, setModalText] = useState<string>('')
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+  const [responseStatus, setResponseStatus] = useState<boolean>(false)
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUser((prevState) => {
@@ -31,12 +23,13 @@ const Register = () => {
     event.preventDefault()
     try {
       const response = await axios.post('http://localhost:4000/api/users/register', user)
-      // console.log(response.data.message)
       setModalText(response.data.message)
       setIsModalOpen(true)
+      setResponseStatus(true)
     } catch (error: any) {
-      setModalText(error.response.data.message)
+      setModalText(error.response.message)
       setIsModalOpen(true)
+      setResponseStatus(false)
     }
   }
 
@@ -59,6 +52,7 @@ const Register = () => {
             placeholder='Full Name'
           />
         </div>
+        <br />
 
         <div>
           <label htmlFor='email'>Email:</label>
@@ -71,6 +65,7 @@ const Register = () => {
             placeholder='Email'
           />
         </div>
+        <br />
 
         <div>
           <label htmlFor='phone'>Phone:</label>
@@ -83,6 +78,7 @@ const Register = () => {
             placeholder='Phone'
           />
         </div>
+        <br />
 
         <div>
           <label htmlFor='password'>Password:</label>
@@ -95,11 +91,15 @@ const Register = () => {
             placeholder='Password'
           />
         </div>
+        <br />
+
         <div>
-          <button type='submit'>Sign in</button>
+          <button type='submit'>Sign Up</button>
         </div>
       </form>
-      {isModalOpen && <Modal modalText={modalText} closeModal={closeModal} />}
+      {isModalOpen && (
+        <Modal modalText={modalText} closeModal={closeModal} responseStatus={responseStatus} />
+      )}
     </div>
   )
 }
