@@ -1,7 +1,27 @@
 import axios from 'axios'
 import { useState } from 'react'
+import styled from 'styled-components'
 import Modal from '../components/Modal'
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  margin-top: 100px;
+`
+
+const Form = styled.form`
+  background-color: teal;
+  color: white;
+  height: 30vh;
+  width: 40vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`
 const Register = () => {
   const [user, setUser] = useState({
     name: '',
@@ -27,6 +47,7 @@ const Register = () => {
       setIsModalOpen(true)
       setResponseStatus(true)
     } catch (error: any) {
+      console.log('Error', error.response.message)
       setModalText(error.response.message)
       setIsModalOpen(true)
       setResponseStatus(false)
@@ -34,13 +55,13 @@ const Register = () => {
   }
 
   const closeModal = () => {
-    setIsModalOpen(false)
+    return setIsModalOpen(false)
   }
 
   return (
-    <div>
+    <Container>
       <h1>Sign Up</h1>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <div>
           <label htmlFor='name'>Name:</label>
           <input
@@ -96,11 +117,11 @@ const Register = () => {
         <div>
           <button type='submit'>Sign Up</button>
         </div>
-      </form>
+      </Form>
       {isModalOpen && (
         <Modal modalText={modalText} closeModal={closeModal} responseStatus={responseStatus} />
       )}
-    </div>
+    </Container>
   )
 }
 export default Register

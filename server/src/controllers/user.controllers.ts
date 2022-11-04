@@ -81,7 +81,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     if (!isPasswordMatched) {
       return res.status(406).send({
         success: false,
-        message: 'Invalid credentials. Email and Password is incorrect.',
+        message: 'Invalid credentials.',
       });
     }
     return res.status(200).send({

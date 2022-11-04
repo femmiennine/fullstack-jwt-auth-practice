@@ -35,7 +35,7 @@ const Login = () => {
   }
 
   const closeModal = () => {
-    setIsModalOpen(false)
+    return setIsModalOpen(false)
   }
 
   return (
@@ -53,6 +53,7 @@ const Login = () => {
             placeholder='Email'
           />
         </div>
+        <br />
 
         <div>
           <label htmlFor='password'>Password:</label>

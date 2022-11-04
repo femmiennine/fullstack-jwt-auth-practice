@@ -1,21 +1,30 @@
+import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+
+const NavBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  font-weight: bold;
+  margin-top: 20px;
+`
 
 const Navbar = () => {
   return (
-    <nav>
-      <Link to='/' className='navlink'>
+    <NavBar>
+      <Link style={{ textDecoration: 'none', color: 'teal' }} to='/'>
         Home
       </Link>
-      <Link to='/register' className='navlink'>
+      <Link style={{ textDecoration: 'none', color: 'teal' }} to='/register'>
         Register
       </Link>
-      <Link to='/login' className='navlink'>
+      <Link style={{ textDecoration: 'none', color: 'teal' }} to='/login'>
         Login
       </Link>
-      <Link to='/profile' className='navlink'>
+      <Link style={{ textDecoration: 'none', color: 'teal' }} to='/profile'>
         Profile
       </Link>
-    </nav>
+    </NavBar>
   )
 }
 export default Navbar
