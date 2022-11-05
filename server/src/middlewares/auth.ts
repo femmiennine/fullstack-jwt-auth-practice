@@ -19,6 +19,7 @@ export const isAuthorized = (req: Request, res: Response, next: NextFunction) =>
       });
     }
 
+    // other option req.headers.cookie.access_token
     const token = req.headers.cookie.split('=')[1];
 
     if (!token) {

@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import dev from '../config/index';
 import { hashedPassword, comparePassword } from '../helper/password';
 import User from '../models/user.schema';
-import { ICustomRequest } from '../middlewares/auth';
+import { ICustomRequest, IJWTToken } from '../middlewares/auth';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -95,6 +95,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
     }
 
     // generate JWT token and usual expiration should be 1 day
+    //id can be named anything like access_key
     const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '40s' });
     console.log(token);
 
@@ -132,6 +133,43 @@ export const userProfile = async (req: Request, res: Response, next: NextFunctio
     res.status(200).json({
       message: 'User info returned successfully',
       user,
+    });
+  } catch (error: any) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const logoutUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.headers.cookie) {
+      return res.status(404).send({
+        message: 'No cookie found',
+      });
+    }
+
+    const token = req.headers.cookie.split('=')[1];
+
+    if (!token) {
+      return res.status(404).send({
+        message: 'No token found',
+      });
+    }
+
+    //verify the token
+    //TYPESCRIPT GUIDE https://dev.to/juliecherner/authentication-with-jwt-tokens-in-typescript-with-express-3gb1
+    jwt.verify(token, String(dev.app.jwt), function (error, decoded) {
+      if (error) {
+        console.log(error);
+      }
+      console.log(decoded);
+      // clear the cookie
+      res.clearCookie(`${(decoded as IJWTToken).id}`);
+    });
+
+    res.status(200).send({
+      message: 'User logged out',
     });
   } catch (error: any) {
     return res.status(500).send({
