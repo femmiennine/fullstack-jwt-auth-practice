@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Modal from '../components/Modal'
 
@@ -32,6 +33,7 @@ const Input = styled.input`
   height: 100%;
 `
 const Register = () => {
+  const navigate = useNavigate()
   const [user, setUser] = useState({
     name: '',
     email: '',
@@ -55,8 +57,9 @@ const Register = () => {
       setModalText(response.data.message)
       setIsModalOpen(true)
       setResponseStatus(true)
+      navigate('/login')
     } catch (error: any) {
-      console.log('Error', error.response.message)
+      console.log(error.response.message)
       setModalText(error.response.message)
       setIsModalOpen(true)
       setResponseStatus(false)

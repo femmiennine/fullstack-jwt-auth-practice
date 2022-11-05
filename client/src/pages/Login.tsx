@@ -26,7 +26,7 @@ const Login = () => {
       setModalText(response.data.message)
       setIsModalOpen(true)
       setResponseStatus(true)
-      navigate('/profile', { state: response.data })
+      navigate('/profile')
     } catch (error: any) {
       setModalText(error.response.message)
       setIsModalOpen(true)
