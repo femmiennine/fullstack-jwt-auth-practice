@@ -1,7 +1,58 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import Modal from '../components/Modal'
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  margin-top: 100px;
+`
+
+const Form = styled.form`
+  background-color: white;
+  color: white;
+  min-height: 25vh;
+  min-width: 40vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 1px solid grey;
+  border-radius: 10px;
+  margin-top: 20px;
+  padding: 20px;
+`
+
+const Input = styled.input`
+  margin-left: 5px;
+  width: 38vh;
+  height: 3vh;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  border: 1px solid grey;
+  border-radius: 5px;
+`
+const Label = styled.label`
+  color: Grey;
+  margin-left: 5px;
+`
+
+const Button = styled.button`
+  background-color: #da2a47;
+  color: white;
+  border-radius: 5px;
+  width: 39vh;
+  height: 5vh;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+`
 
 const Login = () => {
   const navigate = useNavigate()
@@ -39,41 +90,40 @@ const Login = () => {
   }
 
   return (
-    <div>
+    <Container>
       <h1>User Login</h1>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor='email'>Email:</label>
-          <input
+          <Label htmlFor='email'>Email</Label>
+          <br />
+          <Input
             type='email'
             name='email'
             id='email'
             value={user.email}
             onChange={handleInputChange}
-            placeholder='Email'
           />
         </div>
-        <br />
 
         <div>
-          <label htmlFor='password'>Password:</label>
-          <input
+          <Label htmlFor='password'>Password</Label>
+          <br />
+          <Input
             type='password'
             name='password'
             id='password'
             value={user.password}
             onChange={handleInputChange}
-            placeholder='Password'
           />
         </div>
         <div>
-          <button type='submit'>Sign In</button>
+          <Button type='submit'>LOGIN</Button>
         </div>
-      </form>
+      </Form>
       {isModalOpen && (
         <Modal modalText={modalText} closeModal={closeModal} responseStatus={responseStatus} />
       )}
-    </div>
+    </Container>
   )
 }
 export default Login

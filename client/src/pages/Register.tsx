@@ -15,22 +15,43 @@ const Container = styled.div`
 `
 
 const Form = styled.form`
-  background-color: teal;
+  background-color: white;
   color: white;
-  height: 30vh;
-  width: 40vh;
+  min-height: 40vh;
+  min-width: 40vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  padding: 10px;
+  padding: 20px;
+  border: 1px solid grey;
   border-radius: 10px;
+  margin-top: 20px;
 `
 
 const Input = styled.input`
   margin-left: 5px;
   width: 38vh;
-  height: 100%;
+  height: 3vh;
+  font-size: 1rem;
+  letter-spacing: 1.5px;
+  border: 1px solid grey;
+  border-radius: 5px;
+`
+const Label = styled.label`
+  color: Grey;
+  margin-left: 5px;
+`
+
+const Button = styled.button`
+  background-color: #da2a47;
+  color: white;
+  border-radius: 5px;
+  width: 39vh;
+  height: 5vh;
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 1.5px;
 `
 const Register = () => {
   const navigate = useNavigate()
@@ -75,67 +96,49 @@ const Register = () => {
       <h1>Sign Up</h1>
       <Form onSubmit={handleSubmit}>
         <div>
-          <label hidden htmlFor='name'>
-            Name:
-          </label>
-          <Input
-            type='text'
-            name='name'
-            id='name'
-            value={user.name}
-            onChange={handleInputChange}
-            placeholder='Full Name'
-          />
+          <Label htmlFor='name'>Name</Label>
+          <br />
+          <Input type='text' name='name' id='name' value={user.name} onChange={handleInputChange} />
         </div>
-        <br />
 
         <div>
-          <label hidden htmlFor='email'>
-            Email:
-          </label>
+          <Label htmlFor='email'>Email</Label>
+          <br />
           <Input
             type='email'
             name='email'
             id='email'
             value={user.email}
             onChange={handleInputChange}
-            placeholder='Email'
           />
         </div>
-        <br />
 
         <div>
-          <label hidden htmlFor='phone'>
-            Phone:
-          </label>
+          <Label htmlFor='phone'>Phone</Label>
+          <br />
           <Input
             type='tel'
             name='phone'
             id='phone'
             value={user.phone}
             onChange={handleInputChange}
-            placeholder='Phone'
           />
         </div>
-        <br />
 
         <div>
-          <label hidden htmlFor='password'>
-            Password:
-          </label>
+          <Label htmlFor='password'>Password</Label>
+          <br />
           <Input
             type='password'
             name='password'
             id='password'
             value={user.password}
             onChange={handleInputChange}
-            placeholder='Password'
           />
         </div>
-        <br />
 
         <div>
-          <button type='submit'>Sign Up</button>
+          <Button type='submit'>SIGN UP</Button>
         </div>
       </Form>
       {isModalOpen && (
