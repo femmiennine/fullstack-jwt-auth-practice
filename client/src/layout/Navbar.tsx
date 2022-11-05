@@ -6,7 +6,8 @@ const NavBar = styled.div`
   align-items: center;
   justify-content: space-evenly;
   font-weight: bold;
-  margin-top: 20px;
+  height: 10vh;
+  background-color: #f4f2f2;
 `
 
 const Navbar = () => {

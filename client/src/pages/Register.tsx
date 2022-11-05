@@ -20,7 +20,16 @@ const Form = styled.form`
   width: 40vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: space-around;
+  padding: 10px;
+  border-radius: 10px;
+`
+
+const Input = styled.input`
+  margin-left: 5px;
+  width: 38vh;
+  height: 100%;
 `
 const Register = () => {
   const [user, setUser] = useState({
@@ -63,8 +72,10 @@ const Register = () => {
       <h1>Sign Up</h1>
       <Form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor='name'>Name:</label>
-          <input
+          <label hidden htmlFor='name'>
+            Name:
+          </label>
+          <Input
             type='text'
             name='name'
             id='name'
@@ -76,8 +87,10 @@ const Register = () => {
         <br />
 
         <div>
-          <label htmlFor='email'>Email:</label>
-          <input
+          <label hidden htmlFor='email'>
+            Email:
+          </label>
+          <Input
             type='email'
             name='email'
             id='email'
@@ -89,8 +102,10 @@ const Register = () => {
         <br />
 
         <div>
-          <label htmlFor='phone'>Phone:</label>
-          <input
+          <label hidden htmlFor='phone'>
+            Phone:
+          </label>
+          <Input
             type='tel'
             name='phone'
             id='phone'
@@ -102,8 +117,10 @@ const Register = () => {
         <br />
 
         <div>
-          <label htmlFor='password'>Password:</label>
-          <input
+          <label hidden htmlFor='password'>
+            Password:
+          </label>
+          <Input
             type='password'
             name='password'
             id='password'

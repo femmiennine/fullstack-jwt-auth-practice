@@ -7,6 +7,7 @@ const dev = {
   },
   app: {
     port: process.env.SERVER_PORT || 4004,
+    jwt: process.env.JWT_PRIVATE_KEY,
   },
 };
 

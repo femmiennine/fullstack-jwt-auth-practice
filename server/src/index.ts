@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import userRouter from './routes/user.routes';
 import dev from './config/index';
@@ -10,10 +11,16 @@ const app = express();
 const port = dev.app.port || 4008;
 
 //middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 //routes
 app.use('/api/users', userRouter);
