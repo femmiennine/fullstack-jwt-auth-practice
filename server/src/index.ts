@@ -13,7 +13,7 @@ const port = dev.app.port || 4008;
 //middleware
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: dev.app.client_url,
     credentials: true,
   }),
 );

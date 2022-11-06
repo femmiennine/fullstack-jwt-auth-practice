@@ -5,6 +5,8 @@ import { hashedPassword, comparePassword } from '../helper/password';
 import User from '../models/user.schema';
 import { ICustomRequest, IJWTToken } from '../middlewares/auth';
 import { sendVerificationEmail } from '../util/sendVerficationEmail';
+import nodemailer from 'nodemailer';
+import { sendResetPasswordEmail } from '../util/sendResetPasswordEmail';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -230,3 +232,35 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 //     });
 //   }
 // };
+
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const email = req.body.email;
+    const user = await User.findOne({ email: email });
+    const token = jwt.sign({ id: user?._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '35s' });
+    if (user) {
+      if (user.isVerified) {
+        await User.updateOne(
+          { email: email },
+          {
+            $set: {
+              token: token,
+            },
+          },
+        );
+        sendResetPasswordEmail(user.name, user.email, user.token);
+        return res.status(201).send({
+          message: 'Check your email to reset password',
+        });
+      } else {
+        return res.send({ message: `Verify your email address` });
+      }
+    } else {
+      return res.status(404).send({ message: 'This user does not exist' });
+    }
+  } catch (error: any) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};

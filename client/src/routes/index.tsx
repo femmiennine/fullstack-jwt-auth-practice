@@ -4,6 +4,7 @@ import Footer from '../layout/Footer'
 import Navbar from '../layout/Navbar'
 import Contact from '../pages/Contact'
 import Error from '../pages/Error'
+import ForgetPassword from '../pages/ForgetPassword'
 import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Profile from '../pages/Profile'
@@ -24,6 +25,7 @@ const Index = () => {
         )}
         {isLoggedIn && <Route path='/profile' element={<Profile />}></Route>}
         <Route path='/contact' element={<Contact />}></Route>
+        <Route path='/forget-password' element={<ForgetPassword />}></Route>
         <Route path='*' element={<Error />}></Route>
       </Routes>
       <Footer />
