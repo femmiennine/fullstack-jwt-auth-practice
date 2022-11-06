@@ -40,6 +40,8 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       email,
       password: hashPassword,
       phone,
+      isAdmin: 0,
+      image: req.file?.filename,
     });
 
     const userData = await newUser.save();

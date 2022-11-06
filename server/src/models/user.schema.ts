@@ -35,10 +35,9 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please enter your phone number'],
   },
 
-  // image: {
-  //   type: String,
-  //   required: [true, 'Image is required'],
-  // },
+  image: {
+    type: String,
+  },
 
   isAdmin: {
     type: Number,
@@ -54,11 +53,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-
-  // token: {
-  //   type: String,
-  //   default: '',
-  // },
 });
 
 export default mongoose.model<UserDocument>('User', userSchema);
