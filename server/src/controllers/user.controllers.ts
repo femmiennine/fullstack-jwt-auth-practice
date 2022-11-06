@@ -4,6 +4,7 @@ import dev from '../config/index';
 import { hashedPassword, comparePassword } from '../helper/password';
 import User from '../models/user.schema';
 import { ICustomRequest, IJWTToken } from '../middlewares/auth';
+import { sendVerificationEmail } from '../util/sendVerficationEmail';
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -41,8 +42,6 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       phone,
     });
 
-    //NOTE: Add email verification in the main FS project
-
     const userData = await newUser.save();
 
     if (!userData) {
@@ -52,12 +51,14 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       });
     }
 
-    // NOTE: Here you can choose to not send password with the userData.
-
-    return res.status(201).send({
-      success: true,
-      message: 'User successfully registered',
-    });
+    if (userData) {
+      sendVerificationEmail(userData.email, userData.name, userData._id);
+      res.status(201).send({
+        message: 'Registration successful! Please verify your email address before login',
+      });
+    } else {
+      res.status(404).send({ message: 'Route not found' });
+    }
   } catch (error: any) {
     return res.status(500).send({
       message: error.message,
@@ -96,13 +97,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     // generate JWT token and usual expiration should be 1 day
     //id can be named anything like access_key
-    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '1d' });
+    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '38s' });
     console.log(token);
 
-    // send the token inside the cookie parser
+    // pass the token inside the cookie parser
     res.cookie(String(user._id), token, {
       path: '/',
-      expires: new Date(Date.now() + 1000 * 60 * 4),
+      expires: new Date(Date.now() + 1000 * 35),
       httpOnly: true,
       sameSite: 'lax',
     });
@@ -176,3 +177,54 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
     });
   }
 };
+
+// regenerate the token
+// export const getRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     if (!req.headers.cookie) {
+//       return res.status(404).send({
+//         message: 'No cookie found',
+//       });
+//     }
+//     // other option req.headers.cookie.access_token
+//     const oldToken = req.headers.cookie.split('=')[1];
+
+//     if (!oldToken) {
+//       return res.status(404).send({
+//         message: 'No token found',
+//       });
+//     }
+//     //verify the token
+//     //TYPESCRIPT GUIDE https://dev.to/juliecherner/authentication-with-jwt-tokens-in-typescript-with-express-3gb1
+//     jwt.verify(oldToken, String(dev.app.jwt), function (error, decoded) {
+//       if (error) {
+//         console.log(error);
+//         return res.status(403).send({
+//           message: 'Authentication failed',
+//         });
+//       }
+//       //resetting the cookies in the response and request
+//       req.cookies[`${(decoded as IJWTToken).id}`] = '';
+//       res.clearCookie(`${(decoded as IJWTToken).id}`);
+
+//       // generate a new token
+//       const newToken = jwt.sign({ user: {_id, name} }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '35s' });
+//       console.log(newToken);
+
+//       console.log('refresh token', newToken);
+//       // pass the new token to the cookie
+//       res.cookie(String(_id), newToken, {
+//         path: '/',
+//         expires: new Date(Date.now() + 1000 * 32),
+//         httpOnly: true,
+//         sameSite: 'lax',
+//       });
+//       (req as ICustomRequest).id = (decoded as IJWTToken).id;
+//       next();
+//     });
+//   } catch (error: any) {
+//     return res.status(500).send({
+//       message: error.message,
+//     });
+//   }
+// };

@@ -17,10 +17,10 @@ app.use(
     credentials: true,
   }),
 );
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.use('/api/users', userRouter);
@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Server!');
 });
 
-//error handler middleware
+//error handler middleware --> REMINDER: move this to middleware folder in the main project
 app.use((req, res, next) => {
   res.status(404).send('Route not found!');
 });
