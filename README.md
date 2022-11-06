@@ -1,4 +1,4 @@
-# fullstack-jwt-auth-practice
+# Blog App
 ### This is a practice project on JWT Authentication.
 ### Tech Stack:
 ### Frontend - React.js, Redux, Redux Toolkit, and TypeScript
