@@ -96,13 +96,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     // generate JWT token and usual expiration should be 1 day
     //id can be named anything like access_key
-    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '40s' });
+    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '1d' });
     console.log(token);
 
     // send the token inside the cookie parser
     res.cookie(String(user._id), token, {
       path: '/',
-      expires: new Date(Date.now() + 1000 * 37),
+      expires: new Date(Date.now() + 1000 * 60 * 4),
       httpOnly: true,
       sameSite: 'lax',
     });
@@ -156,7 +156,6 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
         message: 'No token found',
       });
     }
-
     //verify the token
     //TYPESCRIPT GUIDE https://dev.to/juliecherner/authentication-with-jwt-tokens-in-typescript-with-express-3gb1
     jwt.verify(token, String(dev.app.jwt), function (error, decoded) {

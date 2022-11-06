@@ -2,7 +2,9 @@ import axios from 'axios'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { useAppDispatch } from '../app/hooks'
 import Modal from '../components/Modal'
+import { login } from '../features/userSlice'
 
 const Container = styled.div`
   display: flex;
@@ -56,6 +58,7 @@ const Button = styled.button`
 
 const Login = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
   const [user, setUser] = useState({
     email: '',
     password: '',
@@ -77,6 +80,7 @@ const Login = () => {
       setModalText(response.data.message)
       setIsModalOpen(true)
       setResponseStatus(true)
+      dispatch(login())
       navigate('/profile')
     } catch (error: any) {
       setModalText(error.response.message)
