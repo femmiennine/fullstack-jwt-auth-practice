@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAppDispatch } from '../app/hooks'
 import Modal from '../components/Modal'
@@ -122,6 +122,10 @@ const Login = () => {
         </div>
         <div>
           <Button type='submit'>LOGIN</Button>
+        </div>
+
+        <div>
+          <Link to='/forget-password'>Forget Password?</Link>
         </div>
       </Form>
       {isModalOpen && (

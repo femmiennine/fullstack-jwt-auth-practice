@@ -9,6 +9,7 @@ import Home from '../pages/Home'
 import Login from '../pages/Login'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
+import ResetPassword from '../pages/ResetPassword'
 
 const Index = () => {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn)
@@ -26,6 +27,7 @@ const Index = () => {
         {isLoggedIn && <Route path='/profile' element={<Profile />}></Route>}
         <Route path='/contact' element={<Contact />}></Route>
         <Route path='/forget-password' element={<ForgetPassword />}></Route>
+        <Route path='/reset-password' element={<ResetPassword />}></Route>
         <Route path='*' element={<Error />}></Route>
       </Routes>
       <Footer />
