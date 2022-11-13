@@ -16,5 +16,9 @@ export type UserRegister = {
   phone: string
   password: string
   confirmPassword: string
-  acceptTerms: boolean
+}
+
+export type UserLogin = {
+  email: string
+  password: string
 }

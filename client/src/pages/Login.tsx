@@ -1,10 +1,12 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { Link, useNavigate } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { Toaster, toast } from 'react-hot-toast'
 import { useAppDispatch } from '../app/hooks'
-import Modal from '../components/Modal'
 import { login } from '../features/userSlice'
+import { validationSchema } from '../validator/login.schema'
+import { UserLogin } from '../types'
+import { loginUser } from '../services/userServices'
 
 const Container = styled.div`
   display: flex;
@@ -13,7 +15,7 @@ const Container = styled.div`
   justify-content: center;
   height: 100%;
   width: 100%;
-  margin-top: 100px;
+  margin-top: 120px;
 `
 
 const Form = styled.form`
@@ -29,6 +31,13 @@ const Form = styled.form`
   border-radius: 10px;
   margin-top: 20px;
   padding: 20px;
+`
+
+const FormBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 15px;
 `
 
 const Input = styled.input`
@@ -56,70 +65,68 @@ const Button = styled.button`
   letter-spacing: 1.5px;
 `
 
+const Span = styled.span`
+  color: red;
+  font-size: 0.8rem;
+  padding: 5px;
+`
+
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const [user, setUser] = useState({
-    email: '',
-    password: '',
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema,
+    onSubmit: async (user: UserLogin, { resetForm }) => {
+      try {
+        const response = await loginUser(user)
+        toast.success(response.message)
+        dispatch(login())
+        navigate('/profile')
+      } catch (error: any) {
+        toast.error(error.response.data.message)
+        resetForm({})
+      }
+    },
   })
-  const [modalText, setModalText] = useState<string>('')
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [responseStatus, setResponseStatus] = useState<boolean>(false)
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUser((prevState) => {
-      return { ...prevState, [event.target.name]: event.target.value }
-    })
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    try {
-      const response = await axios.post('http://localhost:4000/api/users/login', user)
-      setModalText(response.data.message)
-      setIsModalOpen(true)
-      setResponseStatus(true)
-      dispatch(login())
-      navigate('/profile')
-    } catch (error: any) {
-      setModalText(error.response.message)
-      setIsModalOpen(true)
-      setResponseStatus(false)
-    }
-  }
-
-  const closeModal = () => {
-    return setIsModalOpen(false)
-  }
 
   return (
     <Container>
+      <div>
+        <Toaster position='top-center' reverseOrder={false} />
+      </div>
+
       <h1>User Login</h1>
-      <Form onSubmit={handleSubmit}>
-        <div>
+      <Form onSubmit={formik.handleSubmit}>
+        <FormBox>
           <Label htmlFor='email'>Email</Label>
-          <br />
           <Input
             type='email'
             name='email'
             id='email'
-            value={user.email}
-            onChange={handleInputChange}
+            value={formik.values.email}
+            onChange={formik.handleChange}
           />
-        </div>
+          {formik.touched.email && formik.errors.email ? <Span>{formik.errors.email}</Span> : null}
+        </FormBox>
 
-        <div>
+        <FormBox>
           <Label htmlFor='password'>Password</Label>
-          <br />
           <Input
             type='password'
             name='password'
             id='password'
-            value={user.password}
-            onChange={handleInputChange}
+            value={formik.values.password}
+            onChange={formik.handleChange}
           />
-        </div>
+          {formik.touched.password && formik.errors.password ? (
+            <Span>{formik.errors.password}</Span>
+          ) : null}
+        </FormBox>
+
         <div>
           <Button type='submit'>LOGIN</Button>
         </div>
@@ -128,9 +135,6 @@ const Login = () => {
           <Link to='/forget-password'>Forget Password?</Link>
         </div>
       </Form>
-      {isModalOpen && (
-        <Modal modalText={modalText} closeModal={closeModal} responseStatus={responseStatus} />
-      )}
     </Container>
   )
 }

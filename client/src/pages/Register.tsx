@@ -79,12 +79,11 @@ const Register = () => {
       phone: '',
       password: '',
       confirmPassword: '',
-      acceptTerms: false,
     },
     validationSchema,
-    onSubmit: async (values: UserRegister, { resetForm }) => {
+    onSubmit: async (user: UserRegister, { resetForm }) => {
       try {
-        const response = await registerUser(values)
+        const response = await registerUser(user)
         toast.success(response.message)
         resetForm({})
         setTimeout(() => {
