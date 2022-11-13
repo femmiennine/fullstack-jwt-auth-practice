@@ -1,8 +1,10 @@
-import axios from 'axios'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import Modal from '../components/Modal'
+import { useNavigate } from 'react-router-dom'
+import { useFormik } from 'formik'
+import { Toaster, toast } from 'react-hot-toast'
+import { validationSchema } from '../validator/registration.schema'
+import { UserRegister } from '../types/index'
+import { registerUser } from '../services/userServices'
 
 const Container = styled.div`
   display: flex;
@@ -21,12 +23,20 @@ const Form = styled.form`
   min-width: 40vh;
   display: flex;
   flex-direction: column;
+  gap: 1;
   align-items: center;
   justify-content: space-around;
   padding: 20px;
   border: 1px solid grey;
   border-radius: 10px;
   margin-top: 20px;
+`
+
+const FormBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin-bottom: 15px;
 `
 
 const Input = styled.input`
@@ -53,97 +63,115 @@ const Button = styled.button`
   font-weight: 500;
   letter-spacing: 1.5px;
 `
+
+const Span = styled.span`
+  color: red;
+  font-size: 0.8rem;
+  padding: 5px;
+`
+
 const Register = () => {
   const navigate = useNavigate()
-  const [user, setUser] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+      confirmPassword: '',
+      acceptTerms: false,
+    },
+    validationSchema,
+    onSubmit: async (values: UserRegister, { resetForm }) => {
+      try {
+        const response = await registerUser(values)
+        toast.success(response.message)
+        resetForm({})
+        setTimeout(() => {
+          navigate('/login')
+        }, 2000)
+      } catch (error: any) {
+        toast.error(error.response.data.message)
+      }
+    },
   })
-  const [modalText, setModalText] = useState<string>('')
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-  const [responseStatus, setResponseStatus] = useState<boolean>(false)
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUser((prevState) => {
-      return { ...prevState, [event.target.name]: event.target.value }
-    })
-  }
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    try {
-      const response = await axios.post('http://localhost:4000/api/users/register', user)
-      setModalText(response.data.message)
-      setIsModalOpen(true)
-      setResponseStatus(true)
-      navigate('/login')
-    } catch (error: any) {
-      console.log(error.response.message)
-      setModalText(error.response.message)
-      setIsModalOpen(true)
-      setResponseStatus(false)
-    }
-  }
-
-  const closeModal = () => {
-    return setIsModalOpen(false)
-  }
 
   return (
     <Container>
-      <h1>Sign Up</h1>
-      <Form onSubmit={handleSubmit}>
-        <div>
-          <Label htmlFor='name'>Name</Label>
-          <br />
-          <Input type='text' name='name' id='name' value={user.name} onChange={handleInputChange} />
-        </div>
+      <div>
+        <Toaster position='top-center' reverseOrder={false} />
+      </div>
 
-        <div>
+      <h1>Sign Up</h1>
+      <Form onSubmit={formik.handleSubmit}>
+        <FormBox>
+          <Label htmlFor='name'>Name</Label>
+          <Input
+            type='text'
+            name='name'
+            id='name'
+            value={formik.values.name}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.name && formik.errors.name ? <Span>{formik.errors.name}</Span> : null}
+        </FormBox>
+
+        <FormBox>
           <Label htmlFor='email'>Email</Label>
-          <br />
           <Input
             type='email'
             name='email'
             id='email'
-            value={user.email}
-            onChange={handleInputChange}
+            value={formik.values.email}
+            onChange={formik.handleChange}
           />
-        </div>
+          {formik.touched.email && formik.errors.email ? <Span>{formik.errors.email}</Span> : null}
+        </FormBox>
 
-        <div>
+        <FormBox>
           <Label htmlFor='phone'>Phone</Label>
-          <br />
           <Input
             type='tel'
             name='phone'
             id='phone'
-            value={user.phone}
-            onChange={handleInputChange}
+            value={formik.values.phone}
+            onChange={formik.handleChange}
           />
-        </div>
+          {formik.touched.phone && formik.errors.phone ? <Span>{formik.errors.phone}</Span> : null}
+        </FormBox>
 
-        <div>
+        <FormBox>
           <Label htmlFor='password'>Password</Label>
-          <br />
           <Input
             type='password'
             name='password'
             id='password'
-            value={user.password}
-            onChange={handleInputChange}
+            value={formik.values.password}
+            onChange={formik.handleChange}
           />
-        </div>
+          {formik.touched.password && formik.errors.password ? (
+            <Span>{formik.errors.password}</Span>
+          ) : null}
+        </FormBox>
+
+        <FormBox>
+          <Label htmlFor='password'>Confirm Password</Label>
+          <Input
+            type='password'
+            name='confirmPassword'
+            id='confirmPassword'
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <Span>{formik.errors.confirmPassword}</Span>
+          ) : null}
+        </FormBox>
 
         <div>
           <Button type='submit'>SIGN UP</Button>
         </div>
       </Form>
-      {isModalOpen && (
-        <Modal modalText={modalText} closeModal={closeModal} responseStatus={responseStatus} />
-      )}
     </Container>
   )
 }
