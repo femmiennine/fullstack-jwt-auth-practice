@@ -1,12 +1,7 @@
-export type IUserData = {
+export type UserProfile = {
   name: string
   email: string
   phone: string
-  password: string
-}
-
-export type IUserLogin = {
-  email: string
   password: string
 }
 
@@ -21,4 +16,8 @@ export type UserRegister = {
 export type UserLogin = {
   email: string
   password: string
+}
+
+export type ForgetPasswordType = {
+  email: string
 }

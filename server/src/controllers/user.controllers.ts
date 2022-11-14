@@ -101,13 +101,13 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
 
     // generate JWT token and usual expiration should be 1 day
     //id can be named anything like access_key
-    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '38s' });
+    const token = jwt.sign({ id: user._id }, String(dev.app.jwt), { algorithm: 'HS256', expiresIn: '1d' });
     console.log(token);
 
     // pass the token inside the cookie parser
     res.cookie(String(user._id), token, {
       path: '/',
-      expires: new Date(Date.now() + 1000 * 35),
+      expires: new Date(Date.now() + 1000 * 60 * 60),
       httpOnly: true,
       sameSite: 'lax',
     });
@@ -173,7 +173,7 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
     });
 
     res.status(200).send({
-      message: 'User logged out',
+      message: 'User logged out.',
     });
   } catch (error: any) {
     return res.status(500).send({
@@ -233,7 +233,7 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 //   }
 // };
 
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const email = req.body.email;
     const user = await User.findOne({ email: email });
@@ -260,6 +260,82 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
     }
   } catch (error: any) {
     return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const password = req.body.password;
+    const userId = req.body.userId;
+    const hashPassword = await hashedPassword(password);
+    await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        $set: {
+          password: hashPassword,
+          token: '',
+        },
+      },
+    );
+    return res.status(200).send({ message: 'Password successfully changed.' });
+  } catch (error: any) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    res.status(200).send(User);
+  } catch (error: any) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const _id = req.params;
+    const user = await User.findOne({ _id: _id });
+    console.log(user);
+    if (user) {
+      await user.deleteOne({ _id: _id });
+      return res.status(200).send({
+        message: 'Account successfully deleted!',
+      });
+    } else {
+      return res.status(404).send({ message: 'User does not exist.' });
+    }
+  } catch (error: any) {
+    return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const _id = req.params;
+    const user = await User.findOne({ _id: _id });
+    if (user) {
+      await User.updateOne(
+        { _id: _id },
+        {
+          $set: {
+            name: req.body.name,
+            email: req.body.email,
+            phone: req.body.phone,
+          },
+        },
+      );
+    }
+    return res.status(200).send({ message: 'User information updated.' });
+  } catch (error: any) {
+    res.status(500).send({
       message: error.message,
     });
   }

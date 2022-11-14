@@ -1,16 +1,11 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-
-axios.defaults.withCredentials = true
-
-type IUser = {
-  name?: string
-  email?: string
-  phone?: string
-}
+import { Toaster, toast } from 'react-hot-toast'
+// import { userProfile } from '../services/userServices'
+import { UserProfile } from '../types'
 
 const Profile = () => {
-  const [user, setUser] = useState<IUser>()
+  const [user, setUser] = useState<UserProfile>()
   const sendRequest = async () => {
     try {
       const response = await axios.get('http://localhost:4000/api/users/profile', {
@@ -18,8 +13,11 @@ const Profile = () => {
       })
       setUser(response.data.user)
       return response.data
+      // const response = await userProfile()
+      // setUser(response.data.user)
+      // return response.data
     } catch (error: any) {
-      console.log(error)
+      toast.error(error.response.data.message)
     }
   }
 
@@ -29,10 +27,21 @@ const Profile = () => {
 
   return (
     <div>
-      <h1>Profile</h1>
-      <p>{user?.name}</p>
-      <p>{user?.email}</p>
-      <p>{user?.phone}</p>
+      <div>
+        <Toaster position='top-center' reverseOrder={false} />
+      </div>
+
+      <div>
+        <h1>User Profile</h1>
+        <p>{user?.name}</p>
+        <p>{user?.email}</p>
+        <p>{user?.phone}</p>
+      </div>
+
+      <div>
+        <button>Edit Account</button>
+        <button>Delete Account</button>
+      </div>
     </div>
   )
 }
