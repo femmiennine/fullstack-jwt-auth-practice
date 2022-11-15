@@ -12,32 +12,26 @@ var ObjectId = require('mongodb').ObjectId;
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { name, email, password, phone } = req.body;
-
     if (!name || !email || !phone || !password) {
       return res.status(400).send({
         success: false,
         message: 'Please provide a name, email, phone, and password',
       });
     }
-
     if (password.length < 8) {
       return res.status(400).send({
         success: false,
         message: 'Password must be at least 8 characters long',
       });
     }
-
     const user = await User.findOne({ email: email });
-
     if (user) {
       return res.status(400).send({
         success: false,
         message: 'User already exists',
       });
     }
-
     const hashPassword = await hashedPassword(password);
-
     const newUser = new User({
       name,
       email,
@@ -46,16 +40,13 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
       isAdmin: 0,
       image: req.file?.filename,
     });
-
     const userData = await newUser.save();
-
     if (!userData) {
       return res.status(400).send({
         success: false,
         message: 'User unsucessfully registered',
       });
     }
-
     if (userData) {
       sendVerificationEmail(userData.email, userData.name, userData._id);
       res.status(201).send({
@@ -66,6 +57,29 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
     }
   } catch (error: any) {
     return res.status(500).send({
+      message: error.message,
+    });
+  }
+};
+
+export const verifyUser = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const email = req.body.email;
+    const userUpdated = await User.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          isVerified: 1,
+        },
+      },
+    );
+    if (userUpdated) {
+      res.status(201).send({ message: 'verrification successful' });
+    } else {
+      res.status(400).send({ message: 'verrification unsuccessful' });
+    }
+  } catch (error: any) {
+    res.status(500).send({
       message: error.message,
     });
   }

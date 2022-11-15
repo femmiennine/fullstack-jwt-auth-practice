@@ -1,11 +1,22 @@
 import axios from 'axios'
-import { ForgetPasswordType, UserLogin, UserRegister, ResetPasswordType } from '../types/index'
+import {
+  ForgetPasswordType,
+  UserLogin,
+  UserRegister,
+  ResetPasswordType,
+  VerifyUserType,
+} from '../types/index'
 
 const baseUrl = 'http://localhost:4000/api/users/'
 axios.defaults.withCredentials = true
 
 export const registerUser = async (user: UserRegister) => {
   const response = await axios.post(`${baseUrl}register`, user)
+  return response.data
+}
+
+export const verifyUser = async (user: VerifyUserType) => {
+  const response = await axios.post(`${baseUrl}verify-user/:id`, user)
   return response.data
 }
 

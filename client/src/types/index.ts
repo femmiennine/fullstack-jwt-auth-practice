@@ -27,3 +27,7 @@ export type ResetPasswordType = {
   email: string
   confirmPassword: string
 }
+
+export type VerifyUserType = {
+  email: string
+}

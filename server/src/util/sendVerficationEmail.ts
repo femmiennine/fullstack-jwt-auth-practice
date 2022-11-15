@@ -19,7 +19,7 @@ export const sendVerificationEmail = async (email: string, name: string, _id: an
       to: email, // list of receivers
       subject: 'Verification Email', // Subject line
       // text: "Hello world?", // plain text body
-      html: `<p> Welcome ${name}! <a href="http://localhost:3000/verify?id=${_id}"> Click for email verification </a> </p>`, //HTML body
+      html: `<p> Welcome ${name}! <a href="http://localhost:3000/verify-user/${_id}"> Click for email verification </a> </p>`, //HTML body
     };
 
     await transporter.sendMail(mailOptions, (error, info) => {

@@ -10,6 +10,7 @@ import Login from '../pages/Login'
 import Profile from '../pages/Profile'
 import Register from '../pages/Register'
 import ResetPassword from '../pages/ResetPassword'
+import VerifyUser from '../pages/VerifyUser'
 
 const Index = () => {
   const isLoggedIn = useAppSelector((state) => state.user.isLoggedIn)
@@ -28,6 +29,7 @@ const Index = () => {
         <Route path='/contact' element={<Contact />}></Route>
         <Route path='/forget-password' element={<ForgetPassword />}></Route>
         <Route path='/reset-password' element={<ResetPassword />}></Route>
+        <Route path='/verify-user/:id' element={<VerifyUser />}></Route>
         <Route path='*' element={<Error />}></Route>
       </Routes>
       <Footer />

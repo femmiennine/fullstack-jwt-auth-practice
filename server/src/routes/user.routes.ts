@@ -9,6 +9,7 @@ import {
   getAllUsers,
   deleteUser,
   updateUser,
+  verifyUser,
 } from '../controllers/user.controllers';
 import { isAuthorized } from '../middlewares/auth';
 import { registerUserValidator } from '../validator/user.validator';
@@ -20,6 +21,7 @@ router.get('/', getAllUsers);
 router.put('/:_id', updateUser);
 router.delete('/:_id', deleteUser);
 router.post('/register', upload.single('image'), registerUserValidator, registerUser);
+router.post('/verify-user/:id', verifyUser);
 router.post('/login', loginUser);
 router.get('/profile', isAuthorized, userProfile);
 // router.get('/refresh', getRefreshToken, isAuthorized, userProfile);
