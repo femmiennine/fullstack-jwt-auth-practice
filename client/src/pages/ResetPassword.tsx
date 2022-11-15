@@ -73,8 +73,9 @@ const ResetPassword = () => {
   const navigate = useNavigate()
   const formik = useFormik({
     initialValues: {
-      password: '',
       email: '',
+      password: '',
+      confirmPassword: '',
     },
     validationSchema,
     onSubmit: async (user: ResetPasswordType, { resetForm }) => {
@@ -98,6 +99,18 @@ const ResetPassword = () => {
       <h1>Reset Password</h1>
       <Form onSubmit={formik.handleSubmit}>
         <FormBox>
+          <Label htmlFor='email'>Email</Label>
+          <Input
+            type='email'
+            name='email'
+            id='email'
+            value={formik.values.email}
+            onChange={formik.handleChange}
+          />
+          {formik.touched.email && formik.errors.email ? <Span>{formik.errors.email}</Span> : null}
+        </FormBox>
+
+        <FormBox>
           <Label htmlFor='password'>New Password</Label>
           <Input
             type='password'
@@ -112,15 +125,17 @@ const ResetPassword = () => {
         </FormBox>
 
         <FormBox>
-          <Label htmlFor='email'>Email</Label>
+          <Label htmlFor='password'>Confirm Password</Label>
           <Input
-            type='email'
-            name='email'
-            id='email'
-            value={formik.values.email}
+            type='password'
+            name='confirmPassword'
+            id='confirmPassword'
+            value={formik.values.confirmPassword}
             onChange={formik.handleChange}
           />
-          {formik.touched.email && formik.errors.email ? <Span>{formik.errors.email}</Span> : null}
+          {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+            <Span>{formik.errors.confirmPassword}</Span>
+          ) : null}
         </FormBox>
 
         <div>
