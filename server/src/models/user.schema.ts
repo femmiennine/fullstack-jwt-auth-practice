@@ -8,6 +8,7 @@ export type UserDocument = Document & {
   isAdmin: number;
   isVerified: number;
   token: string;
+  _id: string;
 };
 
 const userSchema = new mongoose.Schema({

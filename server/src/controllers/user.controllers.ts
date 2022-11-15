@@ -7,6 +7,7 @@ import { ICustomRequest, IJWTToken } from '../middlewares/auth';
 import { sendVerificationEmail } from '../util/sendVerficationEmail';
 import nodemailer from 'nodemailer';
 import { sendResetPasswordEmail } from '../util/sendResetPasswordEmail';
+var ObjectId = require('mongodb').ObjectId;
 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -268,10 +269,10 @@ export const forgetPassword = async (req: Request, res: Response, next: NextFunc
 export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const password = req.body.password;
-    const userId = req.body.userId;
+    const email = req.body.email;
     const hashPassword = await hashedPassword(password);
-    await User.findByIdAndUpdate(
-      { _id: userId },
+    await User.findOneAndUpdate(
+      { email: email },
       {
         $set: {
           password: hashPassword,
@@ -279,8 +280,11 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
         },
       },
     );
-    return res.status(200).send({ message: 'Password successfully changed.' });
+    return res.status(201).send({
+      message: 'Password changed successfully',
+    });
   } catch (error: any) {
+    console.log(error);
     return res.status(500).send({
       message: error.message,
     });

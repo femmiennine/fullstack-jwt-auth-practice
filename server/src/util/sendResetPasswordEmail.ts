@@ -19,8 +19,8 @@ export const sendResetPasswordEmail = async (name: string, email: string, token:
       from: dev.app.auth_email,
       to: email,
       subject: 'Reset Account Password Link',
-      html: `<p>Please click the link below to reset your password</p> <b/> 
-            <a href="http://localhost:3000/reset-password?token=${token}"> Please reset your password </a>`,
+      html: `<p>Hi ${name}, please click the link below to reset your password</p> <b/> 
+            <a href="http://localhost:3000/reset-password"> Please reset your password </a>`,
     };
 
     await transporter.sendMail(mailOptions, (error, info) => {

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ForgetPasswordType, UserLogin, UserRegister } from '../types/index'
+import { ForgetPasswordType, UserLogin, UserRegister, ResetPasswordType } from '../types/index'
 
 const baseUrl = 'http://localhost:4000/api/users/'
 axios.defaults.withCredentials = true
@@ -22,7 +22,12 @@ export const userProfile = async () => {
 }
 
 export const forgetPassword = async (user: ForgetPasswordType) => {
-  const response = await axios.post(`${baseUrl}/forget-password`, user)
+  const response = await axios.post(`${baseUrl}forget-password`, user)
+  return response.data
+}
+
+export const resetPassword = async (user: ResetPasswordType) => {
+  const response = await axios.post(`${baseUrl}reset-password`, user)
   return response.data
 }
 

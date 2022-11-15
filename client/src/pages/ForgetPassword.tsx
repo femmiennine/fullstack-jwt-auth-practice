@@ -107,7 +107,7 @@ const ForgetPassword = () => {
           />
           {formik.touched.email && formik.errors.email ? <Span>{formik.errors.email}</Span> : null}
           <div>
-            <Button type='submit'>RESET PASSWORD</Button>
+            <Button type='submit'>FORGOT PASSWORD</Button>
           </div>
         </FormBox>
       </Form>
